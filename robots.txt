@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /stuff/
+
+
+Sitemap: https://zacouncil.com/sitemap.xml
