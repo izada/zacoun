@@ -16,10 +16,15 @@ body {
 	height: 100%
 }
 
-a,
+/*a,
 a:active,
 a:focus,
 input:focus {
+	text-decoration: none !important;
+	outline: 0
+}*/
+
+.nostyle {
 	text-decoration: none !important;
 	outline: 0
 }
