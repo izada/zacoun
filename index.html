@@ -2,80 +2,160 @@
 <html lang="en" prefix="og: http://ogp.me/ns#">
 
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-	<meta name="author" content="Ibrahim Zada">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="author" content="Ibrahim Zada">
 
-	<!-- Title -->
-	<title>ZaCouncil</title>
+  <!-- Title -->
+  <title>ZaCouncil</title>
 
-	<!-- OG Tags -->
-	<meta property="og:title" content="ZaCouncil">
-	<meta property="og:image" content="/assets/img/og.png">
-	<meta property="og:description" name="description" content="We bring expertise and care to everything we do.">
+  <!-- OG Tags -->
+  <meta property="og:title" content="ZaCouncil">
+  <meta property="og:image" content="/assets/img/og.png">
+  <meta property="og:description" name="description" content="We bring expertise and care to everything we do.">
 
-	<!-- Favicon -->
-	<link rel="icon" type="image/png" href="assets/img/icon.png">
-	<link rel="apple-touch-icon" type="image/png" href="assets/img/icon.png">
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/assets/img/icon.png">
 
-	<!-- Theme -->
-	<meta name="theme-color" content="#303841">
+  <!-- Theme -->
+  <meta name="theme-color" content="#000000">
 
-	<!-- Font -->
-	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <style>
+    body {
+      height: 100%;
+      background-color: #303841;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
+      color: #fff;
+      font-size: 12pt;
+    }
 
-	<!-- CSS -->
-	<link rel=stylesheet href="./assets/css/main.css">
-	<style>
-		/*Cookie Confirm Button*/
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-		.confirm {
-			border-radius: 6px;
-		}
+    .under{
+      border-bottom: dotted 1px #000000;
+    }
 
-		.confirm:hover {
-			opacity: 80%;
-		}
+    a:hover {
+      border-bottom: solid 1px #000000;
+    }
 
-		.learn-more:hover {
-			opacity: 80%;
-		}
-	</style>
+    p {
+      margin: 0 0 0 0;
+      font-size: 1.5em;
+      line-height: 1.5em;
+    }
 
-	<!-- Google tag (gtag.js) -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-NQFSQ8C8EJ"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());
+    #message {
+      text-align: justify;
+      margin: 15% 25%;
+    }
 
-		gtag('config', 'G-NQFSQ8C8EJ');
-	</script>
+    .subp {
+      font-size: 1.1em;
+    }
+
+    /*Responsive*/
+
+    @media screen and (max-width: 980px) {
+
+      #message {
+        margin: 15% 20%;
+      }
+
+    }
+
+    @media screen and (max-width: 736px) {
+
+      p {
+        font-size: 1.4em;
+      }
+
+      .subp {
+        font-size: 1em;
+      }
+
+      #message {
+        margin: 25% 10%;
+      }
+
+    }
+
+    /*Cookie Confirm Button*/
+
+    .confirm {
+      border-radius: 6px;
+    }
+
+    .confirm:hover {
+      opacity: 80%;
+    }
+    
+    .learn-more:hover {
+      opacity: 80%;
+    }
+
+    /*Pace Loader*/
+
+    .pace {
+      -webkit-pointer-events: none;
+      pointer-events: none;
+
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    .pace-inactive {
+      display: none;
+    }
+
+    .pace .pace-progress {
+      background: #28A7A6;
+      position: fixed;
+      z-index: 2000;
+      top: 0;
+      right: 100%;
+      width: 100%;
+      height: 4px;
+    }
+
+    .tealtitle {
+      color: rgb(40, 167, 166);
+      font-weight: 700;
+    }
+  </style>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ELNWZ69M11"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-ELNWZ69M11');
+  </script>
 </head>
 
-<body id=cafe2>
-	<div class="preloader abs-center">
-		<div class=spinner></div>
-	</div>
-	<div class="bg-cover">
-	</div>
-	<div class=content-wrapper>
-		<div class=v-center>
-			<div class=main-content>
-				<h3 class=mt-0>ZaCouncil</h3>
-				<p>Welcome! We are dedicated to delivering exceptional products and services across a range of industries, including retail, hospitality, and technology. With a strong focus on quality and innovation, we strive to provide outstanding experiences that meet the diverse needs of our customers. Trust ZaCouncil to bring expertise and care to everything we do.</p>
-				<!-- <ul>
-					<li><a href="http://www.maps.google.com/" target="_blank" class="nostyle" rel="noopener noreferrer">Maps</a></li>
-				</ul> -->
-			</div>
-		</div>
-	</div>
-	<!-- JS -->
-	<script src="./assets/js/jquery.min.js"></script>
-	<script src="./assets/js/TweenMax.min.js"></script>
-	<script src="./assets/js/dependencies.js"></script>
-	<script src="./assets/js/main.js"></script>
-	<script src="./assets/js/cookie.notice.min.js"></script>
+<body>
+  <!-- Message -->
+  <div id="message">
+    <p class="tealtitle">ZaCouncil</p>
+    <br>
+    <p class="subp">Welcome! We are dedicated to delivering exceptional products and services across a range of industries, including retail, hospitality, and technology. With a strong focus on quality and innovation, we strive to provide outstanding experiences that meet the diverse needs of our customers. Trust ZaCouncil to bring expertise and care to everything we do.
+    </p>
+  </div>
+  <!-- JS -->
+  <script src="./assets/js/pace.min.js"></script>
+  <script src="./assets/js/cookie.notice.min.js"></script>
 </body>
 
 </html>
