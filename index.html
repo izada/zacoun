@@ -21,8 +21,11 @@
   <!-- Theme -->
   <meta name="theme-color" content="#000000">
 
-  <!-- Font -->
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bokor&display=swap" rel="stylesheet">
   
   <!-- CSS -->
   <style>
@@ -59,6 +62,13 @@
       margin: 10% 20%;
     }
 
+    .supp {
+      font-family: 'Bokor', sans-serif;
+      color: #28A7A6;
+      font-weight: 400;
+      font-size: 2.1em;
+    }
+
     .subp {
       font-size: 1.1em;
     }
@@ -80,6 +90,10 @@
       }
 
       .subp {
+        font-size: 2em;
+      }
+
+      .subp {
         font-size: 1em;
       }
 
@@ -87,13 +101,6 @@
         margin: 25% 10%;
       }
 
-    }
-
-    .czlogo {
-      height: 100px;
-      image-rendering: -webkit-optimize-contrast;
-      -webkit-user-drag: none;
-      -webkit-user-select: none;
     }
 
     /*Cookie Confirm Button*/
@@ -151,9 +158,10 @@
 <body>
   <!-- Message -->
   <div id="message">
-    <p class="subp">Welcome to ZaCouncil! We are committed to delivering exceptional services in technology and innovation. Driven by a passion for quality and creativity, we aim to provide outstanding experiences tailored to our customers’ needs. Trust our team to bring expertise, dedication, and care to everything we do.
+    <p class="supp">ZaCouncil
     </p>
-    <img src="./assets/img/logo.png" alt="ZC" class="lazyload czlogo">
+    <p class="subp">Welcome! We are committed to delivering exceptional services. Driven by a passion for quality and innovation, we aim to provide outstanding experiences tailored to our customers’ needs. Trust our team to bring expertise, dedication, and care to everything we do.
+    </p>
   </div>
   <!-- JS -->
   <script src="./assets/js/pace.min.js"></script>
