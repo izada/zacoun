@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mechanical Movement — Wallpaper</title>
+<style>
+  html,body {
+    height:100%;
+    margin:0;
+    background: #efe7df; /* calm nude background */
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    overflow:hidden;
+    cursor: none;
+  }
+  canvas {
+    display:block;
+    width:100vw;
+    height:100vh;
+  }
+  /* tiny HUD to exit fullscreen (hidden normally) */
+  #hint {
+    position:fixed;
+    right:12px;
+    bottom:12px;
+    padding:6px 10px;
+    color:#6b5e53;
+    background:rgba(255,255,255,0.6);
+    border-radius:10px;
+    font-size:12px;
+    backdrop-filter: blur(4px);
+    user-select:none;
+    pointer-events:none;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hint">Press Esc to exit full screen</div>
+
+<script>
+/*
+Mechanical movement wallpaper
+- Procedural gear drawing on canvas
+- Soft nude palette
+- Parallax with mouse/touch
+- Device pixel ratio aware
+*/
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d', {alpha:true});
+let DPR = Math.max(window.devicePixelRatio || 1, 1);
+let W = 0, H = 0;
+
+function resize() {
+  DPR = Math.max(window.devicePixelRatio || 1, 1);
+  W = Math.max(800, innerWidth);
+  H = Math.max(600, innerHeight);
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  canvas.width = Math.round(W * DPR);
+  canvas.height = Math.round(H * DPR);
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+}
+addEventListener('resize', resize, {passive:true});
+resize();
+
+// palette: calm nude tones and subtle metallic accents
+const palette = {
+  bg: '#efe7df',
+  plate: '#d8c7b9',
+  brass: '#b89260',
+  brassDark: '#91724d',
+  steel: '#c9c9cc',
+  screw: '#7b7b7f',
+  ruby: '#9f3f5a',
+  shadow: 'rgba(0,0,0,0.14)',
+  highlight: 'rgba(255,255,255,0.24)'
+};
+
+// utility: draw a radial gradient highlight
+function radialHighlight(x,y,r, strength=0.12) {
+  const g = ctx.createRadialGradient(x,y, r*0.1, x, y, r);
+  g.addColorStop(0, `rgba(255,255,255,${strength})`);
+  g.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(x,y,r,0,Math.PI*2);
+  ctx.fill();
+}
+
+// procedural gear path generator
+function drawGear(ctx, x, y, radius, teeth, thickness=8, hole=0.25, rotation=0, options={color:'#b89260', edge:'#91724d'}) {
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.rotate(rotation);
+  // base disc
+  ctx.beginPath();
+  ctx.arc(0,0,radius,0,Math.PI*2);
+  ctx.closePath();
+  ctx.fillStyle = options.color;
+  ctx.fill();
+  // teeth
+  const toothDepth = radius * 0.12;
+  const innerR = radius - toothDepth;
+  ctx.beginPath();
+  for (let i=0;i<teeth;i++) {
+    const a = (i/teeth)*Math.PI*2;
+    const a2 = ((i+0.5)/teeth)*Math.PI*2;
+    const a3 = ((i+1)/teeth)*Math.PI*2;
+    const ax = Math.cos(a)*innerR, ay = Math.sin(a)*innerR;
+    const bx = Math.cos(a2)*(radius+toothDepth*0.12), by = Math.sin(a2)*(radius+toothDepth*0.12);
+    const cx = Math.cos(a3)*innerR, cy = Math.sin(a3)*innerR;
+    if (i===0) ctx.moveTo(ax,ay);
+    else ctx.lineTo(ax,ay);
+    ctx.lineTo(bx,by);
+    ctx.lineTo(cx,cy);
+  }
+  ctx.closePath();
+  ctx.fillStyle = options.color;
+  ctx.fill();
+  // rim shading
+  const rimG = ctx.createLinearGradient(-radius, -radius, radius, radius);
+  rimG.addColorStop(0, 'rgba(0,0,0,0.06)');
+  rimG.addColorStop(0.5, 'rgba(255,255,255,0.02)');
+  rimG.addColorStop(1, 'rgba(0,0,0,0.06)');
+  ctx.fillStyle = rimG;
+  ctx.globalCompositeOperation = 'multiply';
+  ctx.fill();
+  ctx.globalCompositeOperation = 'source-over';
+  // center hole
+  ctx.beginPath();
+  ctx.arc(0,0, radius*hole, 0, Math.PI*2);
+  ctx.fillStyle = options.edge;
+  ctx.fill();
+  // screw decorative
+  ctx.beginPath();
+  ctx.fillStyle = palette.screw;
+  ctx.rect(-radius*0.06, -radius*0.02, radius*0.12, radius*0.04);
+  ctx.fill();
+  ctx.restore();
+}
+
+// subtle screw heads / plates
+function drawPlate(x,y,w,h,r=8) {
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.beginPath();
+  ctx.moveTo(0,0+r);
+  ctx.arcTo(0+h,0+r,0+h,0+h,r);
+  // simpler: rounded rect
+  ctx.fillStyle = palette.plate;
+  roundRect(ctx, 0, 0, w, h, r);
+  ctx.fill();
+  // inner highlight
+  ctx.globalCompositeOperation = 'overlay';
+  const g = ctx.createLinearGradient(0,0,w,h);
+  g.addColorStop(0, 'rgba(255,255,255,0.06)');
+  g.addColorStop(1, 'rgba(0,0,0,0.02)');
+  ctx.fillStyle = g;
+  roundRect(ctx, 1, 1, w-2, h-2, r-1);
+  ctx.fill();
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.restore();
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+// scene: gear objects
+const gears = [
+  // large main balance-type wheel
+  {x:0.28, y:0.45, r: 160, teeth: 40, speed: -0.016, color: palette.steel, hole:0.20},
+  // brass center cluster
+  {x:0.55, y:0.54, r: 92, teeth: 30, speed: 0.028, color: palette.brass, hole:0.18},
+  {x:0.75, y:0.34, r: 56, teeth: 22, speed: -0.05, color: palette.brass, hole:0.22},
+  {x:0.45, y:0.70, r: 44, teeth: 18, speed: -0.036, color: palette.brass, hole:0.26},
+  {x:0.17, y:0.30, r: 58, teeth: 20, speed: 0.038, color: palette.brass, hole:0.2},
+  {x:0.82, y:0.72, r: 36, teeth: 16, speed: 0.064, color: palette.brass, hole:0.24},
+];
+
+// animation state
+let t0 = performance.now();
+let last = t0;
+let mouse = {x: W/2, y:H/2};
+let touch = null;
+
+// parallax factors
+let px = 0, py=0;
+
+addEventListener('mousemove', (e) => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+});
+addEventListener('touchmove', (e) => {
+  const t = e.touches[0];
+  if (t) {
+    mouse.x = t.clientX;
+    mouse.y = t.clientY;
+  }
+}, {passive:true});
+
+// draw screws and small decoration
+function drawScrew(x,y,size=10, angle=0) {
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.rotate(angle);
+  ctx.beginPath();
+  ctx.arc(0,0,size,0,Math.PI*2);
+  ctx.fillStyle = palette.screw;
+  ctx.fill();
+  ctx.fillStyle = palette.highlight;
+  ctx.fillRect(-size*0.35, -size*0.06, size*0.7, size*0.12);
+  ctx.restore();
+}
+
+function drawRuby(x,y,r) {
+  ctx.save();
+  ctx.translate(x,y);
+  // small circular red gem
+  const g = ctx.createRadialGradient(-r*0.3, -r*0.3, r*0.1, 0,0,r);
+  g.addColorStop(0, 'rgba(255,255,255,0.6)');
+  g.addColorStop(0.2, '#ff7aa2');
+  g.addColorStop(1, palette.ruby);
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(0,0,r,0,Math.PI*2);
+  ctx.fill();
+  // slight rim
+  ctx.strokeStyle = 'rgba(0,0,0,0.08)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.restore();
+}
+
+// render loop
+function render(now) {
+  const dt = (now - last) / 1000;
+  last = now;
+  // soft background wipe with slight vignette
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = palette.bg;
+  ctx.fillRect(0,0,W,H);
+
+  // parallax from mouse
+  const targetPx = (mouse.x - W/2)/W * 18;
+  const targetPy = (mouse.y - H/2)/H * 12;
+  px += (targetPx - px) * 0.08;
+  py += (targetPy - py) * 0.08;
+
+  // subtle vignette
+  const vg = ctx.createRadialGradient(W*0.5 - px, H*0.45 - py, Math.max(W,H)*0.15, W*0.5 - px, H*0.45 - py, Math.max(W,H)*0.85);
+  vg.addColorStop(0, 'rgba(0,0,0,0)');
+  vg.addColorStop(1, 'rgba(0,0,0,0.12)');
+  ctx.fillStyle = vg;
+  ctx.fillRect(0,0,W,H);
+
+  // soft blurred plate behind gears (gives the feeling of a watch plate)
+  ctx.save();
+  ctx.globalAlpha = 0.98;
+  ctx.fillStyle = palette.plate;
+  const plateW = W*0.92, plateH = H*0.86;
+  const plateX = (W - plateW)/2 - px*0.4;
+  const plateY = (H - plateH)/2 - py*0.2;
+  roundRect(ctx, plateX, plateY, plateW, plateH, 26);
+  ctx.fill();
+  // inner subtle shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.03)';
+  roundRect(ctx, plateX+6, plateY+6, plateW-12, plateH-12, 24);
+  ctx.fill();
+  ctx.restore();
+
+  // compute center for gear positions scaled to canvas
+  for (let i=0;i<gears.length;i++){
+    const g = gears[i];
+    // absolute positions
+    const gx = Math.round(W * g.x - px * (i+1)*0.02);
+    const gy = Math.round(H * g.y - py * (i+1)*0.02);
+    // rotation
+    g._rot = (g._rot || 0) + g.speed * (1 + (i%2?0.05:-0.05));
+    // shadow
+    ctx.save();
+    const shadowOffsetX = Math.sin(now/2000 + i)*6 + px*0.06;
+    const shadowOffsetY = Math.cos(now/2100 + i)*4 + py*0.04;
+    ctx.beginPath();
+    ctx.arc(gx + shadowOffsetX, gy + shadowOffsetY, g.r * 1.05, 0, Math.PI*2);
+    ctx.fillStyle = palette.shadow;
+    ctx.fill();
+    ctx.restore();
+    // draw gear
+    drawGear(ctx, gx, gy, g.r, g.teeth, 8, g.hole, g._rot, {color: g.color, edge: palette.brassDark});
+    // subtle highlight
+    radialHighlight(gx - g.r*0.18, gy - g.r*0.24, g.r*0.9, 0.07);
+    // little ruby bearings for some gears
+    if (i % 2 === 0) {
+      drawRuby(gx + g.r*0.58, gy + g.r*0.11, Math.max(4, g.r*0.06));
+    } else {
+      drawScrew(gx - g.r*0.62, gy - g.r*0.42, Math.max(5, g.r*0.06*1.2), g._rot*0.3);
+    }
+  }
+
+  // small balance wheel styled element (spokes)
+  const main = gears[0];
+  const mx = Math.round(W * main.x - px*0.04);
+  const my = Math.round(H * main.y - py*0.02);
+  ctx.save();
+  ctx.translate(mx,my);
+  ctx.rotate(main._rot * -0.6);
+  // spokes
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = 'rgba(0,0,0,0.06)';
+  for (let s=0;s<4;s++){
+    ctx.beginPath();
+    const a = s * Math.PI/2 + Math.sin(now/1200 + s)*0.02;
+    ctx.moveTo(0,0);
+    ctx.lineTo(Math.cos(a)*(main.r*0.86), Math.sin(a)*(main.r*0.86));
+    ctx.stroke();
+  }
+  // rim inner stroke
+  ctx.beginPath();
+  ctx.arc(0,0, main.r*0.78, 0, Math.PI*2);
+  ctx.lineWidth = 6;
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+  ctx.stroke();
+  ctx.restore();
+
+  // tiny text signature
+  ctx.save();
+  ctx.font = '14px system-ui, -apple-system, Roboto, "Helvetica Neue", Arial';
+  ctx.fillStyle = 'rgba(107,94,83,0.6)';
+  ctx.fillText('mechanical movement', 18 + px*0.08, H - 22 + py*0.04);
+  ctx.restore();
+
+  requestAnimationFrame(render);
+}
+
+requestAnimationFrame(render);
+
+// keyboard: press 'f' to toggle fullscreen
+addEventListener('keydown', (e) => {
+  if (e.key === 'f' || e.key === 'F') {
+    toggleFull();
+  }
+});
+canvas.addEventListener('dblclick', toggleFull);
+
+function toggleFull() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen?.();
+  } else {
+    document.exitFullscreen?.();
+  }
+}
+
+// initial small animation ramp to settle rotation speeds gracefully
+// (we already used constant speeds but this can be left in case of extensions)
+
+</script>
+</body>
+</html>
