@@ -16,6 +16,20 @@ body {
 	height: 100%
 }
 
+@font-face {
+      font-family: "Century Gothic";
+      src: url("../font/centurygothic.ttf") format("truetype");
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "Century Gothic";
+      src: url("../font/centurygothic_bold.ttf") format("truetype");
+      font-weight: bold;
+      font-style: normal;
+    }
+
 a,
 a:active,
 a:focus,
