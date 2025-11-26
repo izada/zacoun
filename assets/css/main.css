@@ -34,6 +34,7 @@ a,
 a:active,
 a:focus,
 input:focus {
+	text-decoration: none !important;
 	outline: 0
 }
 
@@ -512,6 +513,10 @@ a.btn-bordered {
 
 .confirm:hover {
 	opacity: 80%;
+}
+
+.learn-more {
+	text-decoration: underline !important;
 }
 
 .learn-more:hover {
