@@ -515,6 +515,10 @@ a.btn-bordered {
 	opacity: 80%;
 }
 
+.learn-more {
+	text-decoration: underline;
+}
+
 .learn-more:hover {
 	opacity: 80%;
 	border-bottom: none;
